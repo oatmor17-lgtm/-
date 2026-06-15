@@ -1,0 +1,226 @@
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500&family=Dancing+Script:wght@600&display=swap');
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body-wrap {
+    display: block;
+    min-height: 100vh;
+    background: transparent;
+  }
+
+  .scene {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem 1rem 3rem;
+    font-family: 'Sarabun', sans-serif;
+  }
+
+  .envelope-wrap {
+    position: relative;
+    width: 320px;
+    cursor: pointer;
+    margin-bottom: 1.5rem;
+  }
+
+  .envelope {
+    width: 320px;
+    height: 200px;
+    background: #EEEDFE;
+    border-radius: 8px;
+    border: 1.5px solid #AFA9EC;
+    position: relative;
+    overflow: hidden;
+    transition: box-shadow 0.3s;
+  }
+
+  .envelope:hover { box-shadow: 0 4px 24px #AFA9EC55; }
+
+  .envelope-flap {
+    position: absolute;
+    top: 0; left: 0;
+    width: 0; height: 0;
+    border-left: 160px solid transparent;
+    border-right: 160px solid transparent;
+    border-top: 100px solid #CECBF6;
+    transform-origin: top center;
+    transition: transform 0.6s cubic-bezier(.4,0,.2,1);
+    z-index: 2;
+  }
+
+  .envelope-flap.open {
+    transform: rotateX(180deg);
+  }
+
+  .envelope-body-left {
+    position: absolute;
+    bottom: 0; left: 0;
+    width: 0; height: 0;
+    border-bottom: 100px solid #CECBF6;
+    border-right: 160px solid transparent;
+  }
+
+  .envelope-body-right {
+    position: absolute;
+    bottom: 0; right: 0;
+    width: 0; height: 0;
+    border-bottom: 100px solid #AFA9EC;
+    border-left: 160px solid transparent;
+  }
+
+  .envelope-seal {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 40px; height: 40px;
+    background: #7F77DD;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+    z-index: 3;
+    transition: opacity 0.3s;
+    color: white;
+  }
+
+  .hint {
+    font-size: 13px;
+    color: #7F77DD;
+    margin-top: 10px;
+    letter-spacing: 0.5px;
+    opacity: 0.8;
+  }
+
+  .letter-container {
+    display: none;
+    width: 340px;
+    max-width: 95vw;
+    animation: fadeSlideUp 0.7s ease forwards;
+  }
+
+  .letter-container.show { display: block; }
+
+  @keyframes fadeSlideUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .letter-paper {
+    background: #FDFCFF;
+    border: 1.5px solid #CECBF6;
+    border-radius: 12px;
+    padding: 2rem 1.75rem 2rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .letter-paper::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 6px;
+    background: linear-gradient(90deg, #CECBF6, #7F77DD, #CECBF6);
+  }
+
+  .letter-deco {
+    text-align: center;
+    font-size: 22px;
+    margin-bottom: 1rem;
+    letter-spacing: 6px;
+    color: #AFA9EC;
+  }
+
+  .letter-title {
+    font-family: 'Dancing Script', cursive;
+    font-size: 26px;
+    color: #534AB7;
+    text-align: center;
+    margin-bottom: 1.25rem;
+  }
+
+  .letter-divider {
+    height: 1px;
+    background: #EEEDFE;
+    margin-bottom: 1.25rem;
+    border: none;
+  }
+
+  .letter-body {
+    font-size: 15px;
+    line-height: 2;
+    color: #3C3489;
+    white-space: pre-line;
+  }
+
+  .letter-body .highlight {
+    color: #534AB7;
+    font-weight: 500;
+  }
+
+  .letter-footer {
+    margin-top: 1.5rem;
+    text-align: right;
+    font-family: 'Dancing Script', cursive;
+    font-size: 20px;
+    color: #7F77DD;
+  }
+
+  .hearts-row {
+    text-align: center;
+    font-size: 18px;
+    margin-top: 1rem;
+    color: #AFA9EC;
+    letter-spacing: 4px;
+  }
+</style>
+
+<div class="scene">
+  <h2 class="sr-only">จดหมายแสดงความรักและขอโทษ กดซองจดหมายเพื่อเปิดอ่าน</h2>
+
+  <div class="envelope-wrap" id="envWrap" onclick="openLetter()" role="button" aria-label="กดเพื่อเปิดจดหมาย" tabindex="0">
+    <div class="envelope">
+      <div class="envelope-flap" id="flap"></div>
+      <div class="envelope-body-left"></div>
+      <div class="envelope-body-right"></div>
+      <div class="envelope-seal" id="seal">💜</div>
+    </div>
+    <p class="hint" style="text-align:center;">✦ กดเพื่อเปิดจดหมาย ✦</p>
+  </div>
+
+  <div class="letter-container" id="letterBox">
+    <div class="letter-paper">
+      <div class="letter-deco">✦ ✦ ✦</div>
+      <div class="letter-title">ถึง อ้วน ที่รัก</div>
+      <hr class="letter-divider">
+      <div class="letter-body">หนูขอโทษนะคะ ที่หายไปนาน&nbsp;💜
+
+ไปทำธุระมา แล้วมันก็เลยนานกว่าที่คิด หนูรู้ว่าอ้วนรอ แล้วก็เข้าใจนะถ้าอ้วนจะงอน
+
+แต่จริง ๆ แล้ว... ถึงหนูจะไม่ผิดก็เถอะ 555 <span class="highlight">หยอกเล่นนะ!</span>
+
+สิ่งที่หนูอยากพูดจริง ๆ คือ&nbsp;— เมื่อเช้าที่ไปหา หนูแค่อยากให้อ้วนง้อหนูนิดนึง แค่ขอโทษคำเดียวเท่านั้นเลย หนูหายเลยนะ จริง ๆ นะ เชื่อหนูเถอะ 🥺
+
+หนูไม่เคยคิดมิดีมิร้ายกับอ้วนเลยสักนิด และไม่ใช่เพราะติดอีโก้นะ หนูแค่รักอ้วนมากจนไม่รู้จะพูดยังไงดี
+
+<span class="highlight">รักอ้วนมาก รักที่สุดเลย</span> นะ 💜</div>
+      <div class="letter-footer">จุ๊บๆ &hearts;</div>
+    </div>
+    <div class="hearts-row">💜 💜 💜</div>
+  </div>
+</div>
+
+<script>
+  function openLetter() {
+    document.getElementById('flap').classList.add('open');
+    document.getElementById('seal').style.opacity = '0';
+    setTimeout(function() {
+      document.getElementById('envWrap').style.display = 'none';
+      document.getElementById('letterBox').classList.add('show');
+    }, 700);
+  }
+  document.getElementById('envWrap').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter' || e.key === ' ') openLetter();
+  });
+</script>
